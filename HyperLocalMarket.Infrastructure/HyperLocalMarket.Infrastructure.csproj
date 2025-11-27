@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HyperLocalMarket.Application\HyperLocalMarket.Application.csproj" />
+    <ProjectReference Include="..\HyperLocalMarket.Domain\HyperLocalMarket.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="External\" />
+    <Folder Include="Migrations\" />
+    <Folder Include="Persistence\Configurations\" />
+    <Folder Include="Persistence\Repositories\" />
+  </ItemGroup>
+
+</Project>

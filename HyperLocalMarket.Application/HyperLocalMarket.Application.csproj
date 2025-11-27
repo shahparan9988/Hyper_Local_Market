@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HyperLocalMarket.Domain\HyperLocalMarket.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Common\" />
+    <Folder Include="Stores\Dtos\" />
+    <Folder Include="Stores\Services\" />
+    <Folder Include="Users\" />
+    <Folder Include="Orders\" />
+    <Folder Include="Products\" />
+  </ItemGroup>
+
+</Project>
