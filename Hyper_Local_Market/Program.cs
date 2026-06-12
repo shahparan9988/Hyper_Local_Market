@@ -1,3 +1,4 @@
+using HyperLocalMarket.Api.Middlewares;
 using HyperLocalMarket.Infrastructure.Persistence;
 using Serilog;
 
@@ -37,6 +38,11 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+app.UseMiddleware<SessionMiddleware>();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

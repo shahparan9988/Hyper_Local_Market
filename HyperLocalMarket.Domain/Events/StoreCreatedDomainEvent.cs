@@ -11,12 +11,12 @@ namespace HyperLocalMarket.Domain.Events
     {
         public Guid StoreId { get; }
         public string Name { get; }
-        public DateTime OccurredOnUtc { get; }
+        public DateTime OccurredAtUtc { get; }
         public StoreCreatedDomainEvent(Guid storeId, string name) 
         {
             StoreId = storeId;
             Name = name;
-            OccurredOnUtc = DateTime.UtcNow;
+            OccurredAtUtc = DateTime.UtcNow;
         }
     }
 }

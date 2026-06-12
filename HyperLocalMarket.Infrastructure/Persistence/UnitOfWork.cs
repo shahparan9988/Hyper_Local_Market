@@ -2,6 +2,7 @@
 using HyperLocalMarket.Domain.common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,50 +14,52 @@ namespace HyperLocalMarket.Infrastructure.Persistence
     public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
-        private readonly IMediator _mediator;
+        //private readonly IMediator _mediator;
         public UnitOfWork(AppDbContext appDbContext, IMediator mediator)
         {
             _dbContext = appDbContext;
-            _mediator = mediator;
+            //_mediator = mediator;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken ct = default)
         {
-            // Collect domain events BEFORE saving
-            var domainEvents = await CollectDomainEventsAsync(ct);
+            //// Collect domain events BEFORE saving
+            //var domainEvents = await CollectDomainEventsAsync(ct);
 
-            var result = await _dbContext.SaveChangesAsync(ct);
+            //var result = await _dbContext.SaveChangesAsync(ct);
 
-            // Publish domain events AFTER successful save
-            foreach (var domainEvent in domainEvents)
-            {
-                await _mediator.Publish(domainEvent, ct);
-            }
+            //// Publish domain events AFTER successful save
+            //foreach (var domainEvent in domainEvents)
+            //{
+            //    await _mediator.Publish(domainEvent, ct);
+            //}
 
-            return result;
+            //return result;
+
+            return await _dbContext.SaveChangesAsync(ct);
         }
 
-        private async Task<List<IDomainEvent>> CollectDomainEventsAsync(CancellationToken ct)
-        {
-            // Make sure change tracker is up to date
-            _dbContext.ChangeTracker.DetectChanges();
+        //private async Task<List<IDomainEvent>> CollectDomainEventsAsync(CancellationToken ct)
+        //{
+        //    // Make sure change tracker is up to date
+        //    _dbContext.ChangeTracker.DetectChanges();
 
-            var entities = _dbContext.ChangeTracker
-                .Entries<Entity>()
-                .Where(e => e.Entity.DomainEvents.Any())
-                .Select(e => e.Entity)
-                .ToList();
+        //    var entities = _dbContext.ChangeTracker
+        //        .Entries<AggregateRoot>()
+        //        .Where(e => e.Entity.DomainEvents.Any())
+        //        .Select(e => e.Entity)
+        //        .ToList();
 
-            var events = entities
-                .SelectMany(e => e.DomainEvents)
-                .ToList();
+        //    var events = entities
+        //        .SelectMany(e => e.DomainEvents)
+        //        .ToList();
 
-            foreach (var entity in entities)
-            {
-                entity.ClearDomainEvents();
-            }
+        //    foreach (var entity in entities)
+        //    {
+        //        entity.ClearDomainEvents();
+        //    }
 
-            return events;
-        }
+        //    return events;
+        //}
     }
 }

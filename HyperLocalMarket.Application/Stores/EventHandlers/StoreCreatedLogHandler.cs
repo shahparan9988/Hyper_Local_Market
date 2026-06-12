@@ -23,7 +23,7 @@ namespace HyperLocalMarket.Application.Stores.EventHandlers
                 "Store created. StoreId={StoreId}, Name={Name}, OccurredOnUtc={OccurredOnUtc}",
                 notification.StoreId,
                 notification.Name,
-                notification.OccurredOnUtc
+                notification.OccurredAtUtc
                 );
 
             return Task.CompletedTask;

@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="..\HyperLocalMarket.Application\HyperLocalMarket.Application.csproj" />
     <ProjectReference Include="..\HyperLocalMarket.Domain\HyperLocalMarket.Domain.csproj" />
+    <ProjectReference Include="..\HyperLocalMarket.Shared\HyperLocalMarket.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +24,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.8" />
+    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.2" />
   </ItemGroup>

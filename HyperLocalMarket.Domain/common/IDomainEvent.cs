@@ -9,6 +9,6 @@ namespace HyperLocalMarket.Domain.common
 {
     public interface IDomainEvent : INotification
     {
-        DateTime OccurredOnUtc { get; }
+        DateTime OccurredAtUtc { get; }
     }
 }

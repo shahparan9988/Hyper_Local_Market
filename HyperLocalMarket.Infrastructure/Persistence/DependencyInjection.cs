@@ -1,6 +1,8 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces;
 using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+using HyperLocalMarket.Infrastructure.Persistence.Outbox;
 using HyperLocalMarket.Infrastructure.Persistence.Repositories;
+using HyperLocalMarket.Infrastructure.Security;
 using HyperLocalMarket.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,12 +21,18 @@ namespace HyperLocalMarket.Infrastructure.Persistence
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString, o => o.UseNetTopologySuite()));
             
             services.AddScoped<IStoreRepository, StoreRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IEmailService, EmailService>();
+
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISessionRepository, SessionRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IPasswordHasher, AppPasswordHasher>();
+
+            services.AddHostedService<OutboxProcessorBackgroundService>();
 
             return services;
         }

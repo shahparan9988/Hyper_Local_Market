@@ -23,10 +23,10 @@
   <ItemGroup>
     <ProjectReference Include="..\HyperLocalMarket.Application\HyperLocalMarket.Application.csproj" />
     <ProjectReference Include="..\HyperLocalMarket.Infrastructure\HyperLocalMarket.Infrastructure.csproj" />
+    <ProjectReference Include="..\HyperLocalMarket.Shared\HyperLocalMarket.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Middlewares\" />
     <Folder Include="Filters\" />
   </ItemGroup>
 

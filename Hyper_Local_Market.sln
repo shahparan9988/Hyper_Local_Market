@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperLocalMarket.Domain", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperLocalMarket.Infrastructure", "HyperLocalMarket.Infrastructure\HyperLocalMarket.Infrastructure.csproj", "{EBA844E9-8931-4CBB-A581-DA4A036B983B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperLocalMarket.Shared", "HyperLocalMarket.Shared\HyperLocalMarket.Shared.csproj", "{6C64F3A1-9262-49CA-9E27-205EC570C19B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EBA844E9-8931-4CBB-A581-DA4A036B983B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBA844E9-8931-4CBB-A581-DA4A036B983B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBA844E9-8931-4CBB-A581-DA4A036B983B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,17 +9,20 @@ using System.Threading.Tasks;
 
 namespace HyperLocalMarket.Domain.Entities
 {
-    public class Store : Entity
+    public class Store : AggregateRoot
     {
         public string Name { get; private set; } = default!;
-        public Address Address { get; private set; } = default!;
+        //public Address Address { get; private set; } = default!;
+
+        public StoreLocation Location { get; private set; } = default!;
 
         private Store() { }
 
-        public Store(string name, Address address)
+        public Store(string name, StoreLocation location)
         {
             SetName(name);
-            SetAddress(address);
+            //SetAddress(address);
+            SetStoreLocation(location);
             AddDomainEvent(new StoreCreatedDomainEvent(Id, Name));
         }
 
@@ -31,9 +34,14 @@ namespace HyperLocalMarket.Domain.Entities
             Name = name.Trim();
         }
 
-        private void SetAddress(Address address)
+        //private void SetAddress(Address address)
+        //{
+        //    Address = address ?? throw new ArgumentNullException(nameof(address));
+        //}
+
+        private void SetStoreLocation(StoreLocation location)
         {
-            Address = address ?? throw new ArgumentNullException(nameof(address));
+            Location = location ?? throw new ArgumentNullException(nameof(location));
         }
 
         public void ChangeName(string newName)

@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HyperLocalMarket.Domain\HyperLocalMarket.Domain.csproj" />
+    <Compile Remove="Common\DomainEventHandlers\**" />
+    <EmbeddedResource Remove="Common\DomainEventHandlers\**" />
+    <None Remove="Common\DomainEventHandlers\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\DomainEventHandlers\" />
+    <ProjectReference Include="..\HyperLocalMarket.Domain\HyperLocalMarket.Domain.csproj" />
+    <ProjectReference Include="..\HyperLocalMarket.Shared\HyperLocalMarket.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Users\" />
     <Folder Include="Orders\" />
     <Folder Include="Products\" />
