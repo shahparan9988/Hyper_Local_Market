@@ -1,6 +1,8 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+using HyperLocalMarket.Domain.Categories;
 using HyperLocalMarket.Domain.common;
-using HyperLocalMarket.Domain.Entities;
+using HyperLocalMarket.Domain.Products;
+using HyperLocalMarket.Domain.Stores;
 using HyperLocalMarket.Domain.Users;
 using HyperLocalMarket.Infrastructure.Persistence.Outbox;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +18,12 @@ namespace HyperLocalMarket.Infrastructure.Persistence
     public class AppDbContext : DbContext
     {
         public DbSet<Store> Stores => Set<Store>();
+        public DbSet<Product> Products => Set<Product>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Session> Sessions => Set<Session>();
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<CategoryProposal> CategoryProposals =>
+        Set<CategoryProposal>();
 
         public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
 
@@ -71,6 +77,8 @@ namespace HyperLocalMarket.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.HasPostgresExtension("postgis");
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }

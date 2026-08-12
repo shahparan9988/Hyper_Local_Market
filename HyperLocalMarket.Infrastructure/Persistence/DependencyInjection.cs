@@ -1,5 +1,7 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces;
 using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+using HyperLocalMarket.Application.Products.Repositories;
+using HyperLocalMarket.Application.Stores.Services;
 using HyperLocalMarket.Infrastructure.Persistence.Outbox;
 using HyperLocalMarket.Infrastructure.Persistence.Repositories;
 using HyperLocalMarket.Infrastructure.Security;
@@ -19,7 +21,9 @@ namespace HyperLocalMarket.Infrastructure.Persistence
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException(
+                "DefaultConnection was not configured.");
 
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString, o => o.UseNetTopologySuite()));
             
@@ -31,6 +35,16 @@ namespace HyperLocalMarket.Infrastructure.Persistence
             services.AddScoped<ISessionRepository, SessionRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPasswordHasher, AppPasswordHasher>();
+            services.AddSingleton<IStoreSlugService, StoreSlugService>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
+            //services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            /*
+            * CreateProductCommandHandler depends on TimeProvider.
+            */
+            services.AddSingleton<TimeProvider>(
+                TimeProvider.System);
 
             services.AddHostedService<OutboxProcessorBackgroundService>();
 

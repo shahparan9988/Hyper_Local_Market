@@ -7,13 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Enums\" />
-    <Folder Include="Exceptions\" />
+    <PackageReference Include="MediatR" Version="14.0.0" />
+    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="14.0.0" />
-    <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+    <ProjectReference Include="..\HyperLocalMarket.Shared\HyperLocalMarket.Shared.csproj" />
   </ItemGroup>
 
 </Project>

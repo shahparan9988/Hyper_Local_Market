@@ -31,8 +31,8 @@ namespace HyperLocalMarket.Application.Auth.Commands.Login
             LoginCommand request,
             CancellationToken ct)
         {
-            var user = await _userRepository.GetByEmailWithSessionsAsync(
-                request.Email.ToLowerInvariant(),
+            var user = await _userRepository.GetByEmailOrPhoneWithSessionsAsync(
+                request.EmailOrPhone.ToLowerInvariant(), request.EmailOrPhone.ToLowerInvariant(),
                 ct);
 
             if (user is null)

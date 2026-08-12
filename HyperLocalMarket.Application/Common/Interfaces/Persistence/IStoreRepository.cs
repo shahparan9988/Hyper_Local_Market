@@ -1,4 +1,4 @@
-﻿using HyperLocalMarket.Domain.Entities;
+﻿using HyperLocalMarket.Domain.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +13,9 @@ namespace HyperLocalMarket.Application.Common.Interfaces.Persistence
         Task<Store?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<List<Store>> GetAllAsync(CancellationToken cancellationToken = default);
         Task<bool> ExistByNameAsync(string name, CancellationToken cancellationToken = default);
+        Task<bool> ExistsBySlugAsync(string slug, CancellationToken cancellationToken = default);
+        Task<Store?> GetByIdAndUserIdAsync(Guid storeId, Guid userId, CancellationToken cancellationToken = default);
+
 
     }
 }

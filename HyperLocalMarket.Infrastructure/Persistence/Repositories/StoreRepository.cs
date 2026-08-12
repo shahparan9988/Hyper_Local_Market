@@ -1,5 +1,5 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
-using HyperLocalMarket.Domain.Entities;
+using HyperLocalMarket.Domain.Stores;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -34,6 +34,23 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Repositories
         public Task<bool> ExistByNameAsync(string name, CancellationToken cancellationToken = default)
         {
             return _dbContext.Stores.AnyAsync(s => s.Name == name, cancellationToken);
+        }
+        public async Task<bool> ExistsBySlugAsync(string slug, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Stores
+                .AsNoTracking()
+                .AnyAsync(
+                    store => store.Slug == slug,
+                    cancellationToken);
+        }
+
+        public async Task<Store?> GetByIdAndUserIdAsync(Guid storeId, Guid userId, CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Stores
+                .AsNoTracking()
+                .FirstOrDefaultAsync(
+                    store => store.Id == storeId && store.UserId == userId,
+                    cancellationToken);
         }
     }
 }

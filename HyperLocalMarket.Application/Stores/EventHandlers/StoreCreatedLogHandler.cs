@@ -1,4 +1,4 @@
-﻿using HyperLocalMarket.Domain.Events;
+﻿using HyperLocalMarket.Domain.Stores.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;

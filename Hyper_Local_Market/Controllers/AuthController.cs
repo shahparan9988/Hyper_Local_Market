@@ -3,10 +3,10 @@ using HyperLocalMarket.Api.Contracts.Auth;
 using HyperLocalMarket.Application.Auth.Commands.Login;
 using HyperLocalMarket.Application.Auth.Commands.Logout;
 using HyperLocalMarket.Application.Auth.Commands.Register;
-using HyperLocalMarket.Application.Auth.Me;
+using HyperLocalMarket.Application.Auth.Queries.GetCurrentUser;
 using HyperLocalMarket.Shared.Results;
 using MediatR;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HyperLocalMarket.Api.Controllers
@@ -22,6 +22,7 @@ namespace HyperLocalMarket.Api.Controllers
             _sender = sender;
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Login(
             LoginRequest request,
@@ -40,14 +41,14 @@ namespace HyperLocalMarket.Api.Controllers
                     {
                         HttpOnly = true,
                         Secure = true,
-                        SameSite = SameSiteMode.Strict,
+                        SameSite = SameSiteMode.None,
                         Expires = DateTimeOffset.UtcNow.AddYears(1)
                     });
             }
 
             Result<LoginResponse> result = await _sender.Send(
                 new LoginCommand(
-                    request.Email,
+                    request.EmailOrPhone,
                     request.Password,
                     deviceId,
                     HttpContext.Connection.RemoteIpAddress?.ToString(),
@@ -100,7 +101,7 @@ namespace HyperLocalMarket.Api.Controllers
             CancellationToken ct)
         {
             var result = await _sender.Send(
-                new RegisterCommand(request.Email, request.Password, HttpContext.Connection.RemoteIpAddress?.ToString(),
+                new RegisterCommand(request.Email, request.Password, request.Phone, HttpContext.Connection.RemoteIpAddress?.ToString(),
                     Request.Headers.UserAgent.ToString()),
                 ct);
 

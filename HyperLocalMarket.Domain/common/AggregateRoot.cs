@@ -12,6 +12,7 @@ namespace HyperLocalMarket.Domain.common
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
         protected void AddDomainEvent(IDomainEvent domainEvent)
         {
+            ArgumentNullException.ThrowIfNull(domainEvent, nameof(domainEvent));
             _domainEvents.Add(domainEvent);
         }
         public void ClearDomainEvents()

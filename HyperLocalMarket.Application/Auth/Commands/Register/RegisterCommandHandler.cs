@@ -31,12 +31,15 @@ namespace HyperLocalMarket.Application.Auth.Commands.Register
             CancellationToken ct)
         {
             var email = request.Email.Trim().ToLowerInvariant();
-            var existingUser = await _userRepository.GetByEmailWithSessionsAsync(
-                email, ct);
-            if (existingUser is not null)
+            var phone = request.Phone.Trim();
+            var existingUser = await _userRepository.GetByEmailOrPhoneWithSessionsAsync(
+                email, phone, ct);
+            if (existingUser is not null && existingUser.Email == email)
                 throw new ConflictException("Email is already registered.");
+            if (existingUser is not null && (existingUser.Phone == phone || existingUser.Phone == "+88" + phone || "+88" + existingUser.Phone == phone))
+                throw new ConflictException("Phone is already registered.");
             var passwordHash = _passwordHasher.Hash(request.Password);
-            var user = new User(email, passwordHash);
+            var user = new User(email, phone, passwordHash);
             await _userRepository.AddAsync(user, ct);
             await _unitOfWork.SaveChangesAsync(ct);
             return new RegisterResponse(user.Id, user.Email);

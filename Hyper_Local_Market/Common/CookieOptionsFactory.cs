@@ -8,7 +8,7 @@
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 Expires = new DateTimeOffset(expiresAtUtc),
                 Path = "/"
             };
@@ -20,7 +20,7 @@
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Lax,
+                SameSite = SameSiteMode.None,
                 Path = "/"
             };
         }

@@ -1,6 +1,7 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
-using HyperLocalMarket.Application.Common.Models;
-using HyperLocalMarket.Domain.Entities;
+using HyperLocalMarket.Application.Stores.Dtos;
+using HyperLocalMarket.Application.Stores.Services;
+using HyperLocalMarket.Domain.Stores;
 using HyperLocalMarket.Domain.ValueObjects;
 using MediatR;
 using System;
@@ -15,10 +16,15 @@ namespace HyperLocalMarket.Application.Stores.Commands.CreateStore
     {
         private readonly IStoreRepository _storeRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IStoreSlugService _storeSlugService;
 
-        public CreateStoreCommandHandler(IStoreRepository storeRepository, IUnitOfWork unitOfWork)
+        public CreateStoreCommandHandler(
+            IStoreRepository storeRepository,
+            IStoreSlugService storeSlugService,
+            IUnitOfWork unitOfWork)
         {
             _storeRepository = storeRepository;
+            _storeSlugService = storeSlugService;
             _unitOfWork = unitOfWork;
         }
 
@@ -26,7 +32,17 @@ namespace HyperLocalMarket.Application.Stores.Commands.CreateStore
         {
             var location = MapToDomain(request.Location);
 
-            var store = new Store(request.Name, location);
+            var slug = _storeSlugService.GenerateUnique(request.Name);
+
+            var store = Store.Create(
+                request.UserId,
+                request.Name,
+                slug,
+                request.Description,
+                request.PhoneNumber,
+                request.Email,
+                location,
+                request.TimeZoneId);
             await _storeRepository.AddAsync(store, cancellationToken);
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             return store.Id;

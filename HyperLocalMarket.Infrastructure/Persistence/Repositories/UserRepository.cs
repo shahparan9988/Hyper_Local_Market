@@ -18,13 +18,13 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<User?> GetByEmailWithSessionsAsync(
-            string email,
+        public Task<User?> GetByEmailOrPhoneWithSessionsAsync(
+            string email, string phone,
             CancellationToken ct)
         {
             return _dbContext.Users
                 .Include(x => x.Sessions)
-                .FirstOrDefaultAsync(x => x.Email == email, ct);
+                .FirstOrDefaultAsync(x => x.Email == email || x.Phone == phone, ct);
         }
 
         public Task<User?> GetByIdWithSessionsAsync(

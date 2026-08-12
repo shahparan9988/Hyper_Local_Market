@@ -1,6 +1,7 @@
-﻿using HyperLocalMarket.Api.Contracts.Stores;
-using HyperLocalMarket.Application.Common.Models;
+﻿using HyperLocalMarket.Api.Common;
+using HyperLocalMarket.Api.Contracts.Stores;
 using HyperLocalMarket.Application.Stores.Commands.CreateStore;
+using HyperLocalMarket.Application.Stores.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,8 +21,14 @@ namespace HyperLocalMarket.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CreateStoreRequest request, CancellationToken cancellationToken)
         {
+            var userId = HttpContext.GetUserId();
             var command = new CreateStoreCommand(
+                userId,
                 request.Name,
+                request.Description,
+                request.PhoneNumber,
+                request.Email,
+                request.TimeZoneId,
                 new StoreLocationDto(
                     request.Location.CountryCode,
                     new GeoLocationDto(request.Location.Coordinates.Latitude, request.Location.Coordinates.Longitude),

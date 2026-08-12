@@ -10,6 +10,7 @@ namespace HyperLocalMarket.Application.Auth.Commands.Register
     public sealed record RegisterCommand(
         string Email,
         string Password,
+        string Phone,
         string? IpAddress,
         string? UserAgent
     ) : IRequest<RegisterResponse>;

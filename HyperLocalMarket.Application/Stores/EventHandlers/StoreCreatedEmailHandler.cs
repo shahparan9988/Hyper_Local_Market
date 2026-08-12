@@ -1,5 +1,5 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces;
-using HyperLocalMarket.Domain.Events;
+using HyperLocalMarket.Domain.Stores.Events;
 using MediatR;
 using System;
 using System.Collections.Generic;

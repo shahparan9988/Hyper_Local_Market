@@ -10,7 +10,7 @@ namespace HyperLocalMarket.Application.Auth.Commands.Login
 {
     public sealed record LoginCommand
     (
-        string Email,
+        string EmailOrPhone,
         string Password,
         string DeviceKey,
         string? IpAddress,

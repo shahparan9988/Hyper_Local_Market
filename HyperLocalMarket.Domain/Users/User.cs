@@ -11,7 +11,7 @@ namespace HyperLocalMarket.Domain.Users
     public sealed class User : AggregateRoot
     {
         private readonly List<Session> _sessions = new();
-
+        public string Phone { get; private set; } = default!;
         public string Email { get; private set; } = default!;
         public string PasswordHash { get; private set; } = default!;
         public bool IsActive { get; private set; }
@@ -20,10 +20,11 @@ namespace HyperLocalMarket.Domain.Users
 
         private User() { }
 
-        public User(string email, string passwordHash)
+        public User(string email, string phone, string passwordHash)
         {
             Id = Guid.NewGuid();
             Email = email.ToLowerInvariant();
+            Phone = phone;
             PasswordHash = passwordHash;
             IsActive = true;
         }
