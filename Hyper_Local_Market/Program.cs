@@ -1,8 +1,10 @@
 using HyperLocalMarket.Api.Authentication;
+using HyperLocalMarket.Api.Authorization;
 using HyperLocalMarket.Api.Middlewares;
 using HyperLocalMarket.Application;
 using HyperLocalMarket.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Serilog;
 
 
@@ -59,6 +61,14 @@ builder.Services
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddSingleton<
+    IAuthorizationPolicyProvider,
+    PermissionPolicyProvider>();
+
+builder.Services.AddScoped<
+    IAuthorizationHandler,
+    PermissionAuthorizationHandler>();
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("ReactApp", policy =>
@@ -81,6 +91,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseRouting();
 
 app.UseCors("ReactApp");
 

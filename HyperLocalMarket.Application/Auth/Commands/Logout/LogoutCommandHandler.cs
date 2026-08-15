@@ -1,4 +1,5 @@
-﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+﻿using HyperLocalMarket.Application.Auth.Repositories;
+using HyperLocalMarket.Application.Common.Interfaces.Persistence;
 using HyperLocalMarket.Shared.Exceptions;
 using MediatR;
 using System;

@@ -24,6 +24,228 @@ namespace HyperLocalMarket.Infrastructure.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "postgis");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("HyperLocalMarket.Domain.Authorization.PlatformPermission", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("UX_PlatformPermissions_Code");
+
+                    b.ToTable("PlatformPermissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b101"),
+                            Code = "roles.assign",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Assign and revoke platform roles."
+                        },
+                        new
+                        {
+                            Id = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b102"),
+                            Code = "users.view",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "View platform user administration data."
+                        },
+                        new
+                        {
+                            Id = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b103"),
+                            Code = "users.suspend",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Suspend platform users."
+                        },
+                        new
+                        {
+                            Id = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b104"),
+                            Code = "stores.suspend",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Suspend marketplace stores."
+                        },
+                        new
+                        {
+                            Id = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b105"),
+                            Code = "categories.review",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Review category proposals."
+                        },
+                        new
+                        {
+                            Id = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b106"),
+                            Code = "categories.manage",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Create and modify marketplace categories."
+                        });
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Authorization.PlatformRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<bool>("IsSystem")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("UX_PlatformRoles_Code");
+
+                    b.ToTable("PlatformRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            Code = "platform-admin",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Full platform administration access.",
+                            IsSystem = true,
+                            Name = "Platform administrator"
+                        },
+                        new
+                        {
+                            Id = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a02"),
+                            Code = "category-moderator",
+                            CreatedAtUtc = new DateTime(2026, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Description = "Reviews and manages marketplace categories.",
+                            IsSystem = true,
+                            Name = "Category moderator"
+                        });
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Authorization.PlatformRolePermission", b =>
+                {
+                    b.Property<Guid>("PlatformRoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PlatformPermissionId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("PlatformRoleId", "PlatformPermissionId");
+
+                    b.HasIndex("PlatformPermissionId")
+                        .HasDatabaseName("IX_PlatformRolePermissions_PermissionId");
+
+                    b.ToTable("PlatformRolePermissions", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b101")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b102")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b103")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b104")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b105")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a01"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b106")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a02"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b105")
+                        },
+                        new
+                        {
+                            PlatformRoleId = new Guid("9d5c56e4-1b64-4b96-a8e4-e8fce1f85a02"),
+                            PlatformPermissionId = new Guid("2a74d1b6-ce4d-4456-ad23-587cde13b106")
+                        });
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Authorization.UserPlatformRole", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("AssignedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("AssignedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("PlatformRoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("RevokedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("RevokedByUserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssignedByUserId");
+
+                    b.HasIndex("RevokedByUserId");
+
+                    b.HasIndex("PlatformRoleId", "RevokedAtUtc")
+                        .HasDatabaseName("IX_UserPlatformRoles_RoleId_RevokedAtUtc");
+
+                    b.HasIndex("UserId", "PlatformRoleId")
+                        .IsUnique()
+                        .HasDatabaseName("UX_UserPlatformRoles_Active_UserId_RoleId")
+                        .HasFilter("\"RevokedAtUtc\" IS NULL");
+
+                    b.ToTable("UserPlatformRoles", (string)null);
+                });
+
             modelBuilder.Entity("HyperLocalMarket.Domain.Categories.Category", b =>
                 {
                     b.Property<Guid>("Id")
@@ -189,8 +411,8 @@ namespace HyperLocalMarket.Infrastructure.Migrations
 
                     b.Property<string>("Slug")
                         .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)");
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -615,6 +837,47 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.HasIndex("ProcessedAtUtc", "RetryCount");
 
                     b.ToTable("outbox_messages", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Authorization.PlatformRolePermission", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Authorization.PlatformPermission", null)
+                        .WithMany()
+                        .HasForeignKey("PlatformPermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HyperLocalMarket.Domain.Authorization.PlatformRole", null)
+                        .WithMany()
+                        .HasForeignKey("PlatformRoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Authorization.UserPlatformRole", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("AssignedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HyperLocalMarket.Domain.Authorization.PlatformRole", null)
+                        .WithMany()
+                        .HasForeignKey("PlatformRoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HyperLocalMarket.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("RevokedByUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("HyperLocalMarket.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Categories.CategoryAlias", b =>

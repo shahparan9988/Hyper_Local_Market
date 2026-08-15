@@ -1,4 +1,6 @@
-﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+﻿using HyperLocalMarket.Application.Auth.Repositories;
+using HyperLocalMarket.Application.Auth.Services;
+using HyperLocalMarket.Application.Common.Interfaces.Persistence;
 using HyperLocalMarket.Application.Common.Security;
 using HyperLocalMarket.Shared.Exceptions;
 using HyperLocalMarket.Shared.Results;

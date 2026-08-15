@@ -1,10 +1,20 @@
-﻿using HyperLocalMarket.Application.Common.Interfaces;
+﻿using HyperLocalMarket.Application.Auth.Repositories;
+using HyperLocalMarket.Application.Auth.Services;
+using HyperLocalMarket.Application.Authorization.Repositories;
+using HyperLocalMarket.Application.Authorization.Services;
+using HyperLocalMarket.Application.Common.Interfaces;
 using HyperLocalMarket.Application.Common.Interfaces.Persistence;
 using HyperLocalMarket.Application.Products.Repositories;
+using HyperLocalMarket.Application.Stores.Repositories;
 using HyperLocalMarket.Application.Stores.Services;
+using HyperLocalMarket.Infrastructure.External.Emaill;
 using HyperLocalMarket.Infrastructure.Persistence.Outbox;
-using HyperLocalMarket.Infrastructure.Persistence.Repositories;
-using HyperLocalMarket.Infrastructure.Security;
+using HyperLocalMarket.Infrastructure.Persistence.Repositories.Auth;
+using HyperLocalMarket.Infrastructure.Persistence.Repositories.Authorization;
+using HyperLocalMarket.Infrastructure.Persistence.Repositories.Products;
+using HyperLocalMarket.Infrastructure.Persistence.Repositories.Stores;
+using HyperLocalMarket.Infrastructure.Security.Authentication;
+using HyperLocalMarket.Infrastructure.Security.Authorization;
 using HyperLocalMarket.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,13 +48,10 @@ namespace HyperLocalMarket.Infrastructure.Persistence
             services.AddSingleton<IStoreSlugService, StoreSlugService>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IPlatformAuthorizationRepository, PlatformAuthorizationRepository>();
+            services.AddScoped<IPlatformPermissionChecker, PlatformPermissionChecker>();
             //services.AddScoped<ICategoryRepository, CategoryRepository>();
 
-            /*
-            * CreateProductCommandHandler depends on TimeProvider.
-            */
-            services.AddSingleton<TimeProvider>(
-                TimeProvider.System);
 
             services.AddHostedService<OutboxProcessorBackgroundService>();
 

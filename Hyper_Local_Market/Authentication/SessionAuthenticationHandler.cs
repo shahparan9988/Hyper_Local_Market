@@ -1,4 +1,4 @@
-﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+﻿using HyperLocalMarket.Application.Auth.Repositories;
 using HyperLocalMarket.Application.Common.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;

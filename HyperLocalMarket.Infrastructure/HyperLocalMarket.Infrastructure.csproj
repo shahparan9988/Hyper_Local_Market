@@ -13,7 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="External\" />
+    <Folder Include="Caching\" />
+    <Folder Include="Persistence\Configurations\Inventory\" />
+    <Folder Include="Persistence\Repositories\Categories\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
 using HyperLocalMarket.Application.Products.Repositories;
 using HyperLocalMarket.Application.Products.Services;
+using HyperLocalMarket.Application.Stores.Repositories;
 using HyperLocalMarket.Domain.Products;
 using HyperLocalMarket.Shared.Exceptions;
 using MediatR;

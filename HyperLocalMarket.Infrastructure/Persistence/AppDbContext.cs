@@ -1,4 +1,5 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+using HyperLocalMarket.Domain.Authorization;
 using HyperLocalMarket.Domain.Categories;
 using HyperLocalMarket.Domain.common;
 using HyperLocalMarket.Domain.Products;
@@ -22,11 +23,12 @@ namespace HyperLocalMarket.Infrastructure.Persistence
         public DbSet<User> Users => Set<User>();
         public DbSet<Session> Sessions => Set<Session>();
         public DbSet<Category> Categories => Set<Category>();
-        public DbSet<CategoryProposal> CategoryProposals =>
-        Set<CategoryProposal>();
-
+        public DbSet<CategoryProposal> CategoryProposals => Set<CategoryProposal>();
         public DbSet<OutboxMessage> OutboxMessages => Set<OutboxMessage>();
-
+        public DbSet<PlatformRole> PlatformRoles => Set<PlatformRole>();
+        public DbSet<PlatformPermission> PlatformPermissions => Set<PlatformPermission>();
+        public DbSet<PlatformRolePermission> PlatformRolePermissions => Set<PlatformRolePermission>();
+        public DbSet<UserPlatformRole> UserPlatformRoles => Set<UserPlatformRole>();
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 

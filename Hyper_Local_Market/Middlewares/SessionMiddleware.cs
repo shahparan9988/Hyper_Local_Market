@@ -1,4 +1,4 @@
-﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
+﻿using HyperLocalMarket.Application.Auth.Repositories;
 using HyperLocalMarket.Application.Common.Security;
 
 namespace HyperLocalMarket.Api.Middlewares

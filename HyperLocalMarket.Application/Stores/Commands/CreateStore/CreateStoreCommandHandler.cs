@@ -1,5 +1,6 @@
 ﻿using HyperLocalMarket.Application.Common.Interfaces.Persistence;
 using HyperLocalMarket.Application.Stores.Dtos;
+using HyperLocalMarket.Application.Stores.Repositories;
 using HyperLocalMarket.Application.Stores.Services;
 using HyperLocalMarket.Domain.Stores;
 using HyperLocalMarket.Domain.ValueObjects;

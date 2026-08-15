@@ -8,6 +8,6 @@ namespace HyperLocalMarket.Shared.Exceptions
 {
     public sealed class ForbiddenException : Exception
     {
-        public ForbiddenException(string message = "Forbidden") : base(message){ }
+        public ForbiddenException(string message = "You are not allowed to perform this operation.") : base(message){ }
     }
 }

@@ -1,12 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using FluentValidation;
+﻿using FluentValidation;
+using HyperLocalMarket.Application.Common.Abstractions;
+using HyperLocalMarket.Application.Common.Behaviors;
+using HyperLocalMarket.Application.Common.Slugs;
+using HyperLocalMarket.Application.Products.Services;
 using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HyperLocalMarket.Application.Common.Behaviors;
 
 namespace HyperLocalMarket.Application
 {
@@ -31,6 +34,15 @@ namespace HyperLocalMarket.Application
             // inside the Application assembly.
             services.AddValidatorsFromAssembly(
                 applicationAssembly);
+
+
+            services.AddScoped<
+                IProductSlugService,
+                ProductSlugService>();
+
+            services.AddScoped<
+                ISlugGenerator,
+                SlugGenerator>();
 
             // Makes TimeProvider available through dependency injection.
             services.AddSingleton<TimeProvider>(
