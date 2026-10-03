@@ -12,7 +12,7 @@ using Guard = HyperLocalMarket.Domain.common.Guard;
 
 namespace HyperLocalMarket.Domain.Products
 {
-    public sealed class Product : AggregateRoot
+    public sealed partial class Product : AggregateRoot
     {
         public const int NameMaxLength = 200;
         public const int SlugMaxLength = 300;
@@ -24,6 +24,7 @@ namespace HyperLocalMarket.Domain.Products
         private readonly List<ProductOption> _options = [];
         private readonly List<ProductVariant> _variants = [];
         private readonly List<ProductImage> _images = [];
+        private readonly List<ProductDeliveryOption> _deliveryOptions = [];
 
         private Product()
         {
@@ -54,7 +55,7 @@ namespace HyperLocalMarket.Domain.Products
             CategoryAssignmentStatus = CategoryAssignmentStatus.Unassigned;
             Status = ProductStatus.Draft;
             CreatedAtUtc = utcNow;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public Guid StoreId { get; private set; }
@@ -96,6 +97,10 @@ namespace HyperLocalMarket.Domain.Products
         public IReadOnlyCollection<ProductImage> Images =>
             _images.AsReadOnly();
 
+        public IReadOnlyCollection<ProductDeliveryOption> DeliveryOptions =>
+            _deliveryOptions.AsReadOnly();
+        public int DeliveryOptionsVersion { get; private set; }
+
         public static Product Create(
             Guid storeId,
             string name,
@@ -136,7 +141,7 @@ namespace HyperLocalMarket.Domain.Products
                 nameof(description),
                 DescriptionMaxLength);
             Brand = Guard.OptionalText(brand, nameof(brand), BrandMaxLength);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void ChangeCategory(Guid categoryId, DateTime utcNow)
@@ -146,7 +151,7 @@ namespace HyperLocalMarket.Domain.Products
             Guard.Utc(utcNow, nameof(utcNow));
 
             CategoryId = categoryId;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public ProductOption AddOption(
@@ -163,7 +168,7 @@ namespace HyperLocalMarket.Domain.Products
                     "New options cannot be added after variants exist.");
             }
 
-            if (_options.Count >= MaximumOptionCount)
+            if (_options.Count(x => x.IsListed) >= MaximumOptionCount)
             {
                 throw new DomainException(
                     $"A product cannot contain more than {MaximumOptionCount} options.");
@@ -175,7 +180,7 @@ namespace HyperLocalMarket.Domain.Products
                 ProductOption.NameMaxLength);
 
             if (_options.Any(option =>
-                    string.Equals(
+                    option.IsListed && string.Equals(
                         option.Name,
                         normalizedName,
                         StringComparison.OrdinalIgnoreCase)))
@@ -190,7 +195,7 @@ namespace HyperLocalMarket.Domain.Products
                 displayOrder);
 
             _options.Add(option);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
             return option;
         }
 
@@ -218,7 +223,7 @@ namespace HyperLocalMarket.Domain.Products
             CategoryAssignmentStatus =
                 CategoryAssignmentStatus.PendingReview;
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductCategorySelectedDomainEvent(
@@ -237,7 +242,7 @@ namespace HyperLocalMarket.Domain.Products
             Guard.Utc(utcNow, nameof(utcNow));
 
             CategoryId = categoryId;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void ConfirmCategory(Guid categoryId, DateTime utcNow)
@@ -263,7 +268,7 @@ namespace HyperLocalMarket.Domain.Products
             CategoryAssignmentStatus =
                 CategoryAssignmentStatus.Confirmed;
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductCategorySelectedDomainEvent(
@@ -300,7 +305,7 @@ namespace HyperLocalMarket.Domain.Products
             CategoryAssignmentStatus =
                 CategoryAssignmentStatus.PendingReview;
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductCategoryProposalLinkedDomainEvent(
@@ -331,7 +336,7 @@ namespace HyperLocalMarket.Domain.Products
             CategoryAssignmentStatus =
                 CategoryAssignmentStatus.NeedsCorrection;
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductCategoryNeedsCorrectionDomainEvent(
@@ -360,7 +365,7 @@ namespace HyperLocalMarket.Domain.Products
             CategoryAssignmentStatus =
                 CategoryAssignmentStatus.Unassigned;
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductCategoryClearedDomainEvent(
@@ -382,7 +387,7 @@ namespace HyperLocalMarket.Domain.Products
                 value,
                 displayOrder);
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
             return optionValue;
         }
 
@@ -409,7 +414,7 @@ namespace HyperLocalMarket.Domain.Products
             ValidateBarcodeIsUnique(barcode);
             ValidateCurrency(price);
 
-            if (_options.Count == 0 && _variants.Count > 0)
+            if (_options.Count(x => x.IsListed) == 0 && _variants.Count > 0)
             {
                 throw new DomainException(
                     "A product without options can contain only one variant.");
@@ -476,7 +481,7 @@ namespace HyperLocalMarket.Domain.Products
                 utcNow);
 
             _variants.Add(variant);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductVariantAddedDomainEvent(
@@ -502,7 +507,7 @@ namespace HyperLocalMarket.Domain.Products
             var previousAmount = variant.Price.Amount;
 
             variant.ChangePrice(price, compareAtPrice, utcNow);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             if (previousAmount != price.Amount)
             {
@@ -531,7 +536,7 @@ namespace HyperLocalMarket.Domain.Products
             ValidateBarcodeIsUnique(barcode, variantId);
 
             variant.UpdateIdentifiers(sku, barcode, utcNow);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void UpdateVariantSalesRules(
@@ -549,7 +554,7 @@ namespace HyperLocalMarket.Domain.Products
                 minimumOrderQuantity,
                 quantityIncrement,
                 utcNow);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void UpdateVariantShippingInformation(
@@ -566,7 +571,7 @@ namespace HyperLocalMarket.Domain.Products
                 shippingDimensions,
                 utcNow);
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void ChangeDefaultVariant(Guid variantId, DateTime utcNow)
@@ -583,7 +588,7 @@ namespace HyperLocalMarket.Domain.Products
 
             RemoveCurrentDefault(utcNow);
             variant.MakeDefault(utcNow);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void DeactivateVariant(Guid variantId, DateTime utcNow)
@@ -592,7 +597,7 @@ namespace HyperLocalMarket.Domain.Products
             Guard.Utc(utcNow, nameof(utcNow));
 
             GetVariant(variantId).Deactivate(utcNow);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void ActivateVariant(Guid variantId, DateTime utcNow)
@@ -601,7 +606,7 @@ namespace HyperLocalMarket.Domain.Products
             Guard.Utc(utcNow, nameof(utcNow));
 
             GetVariant(variantId).Activate(utcNow);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public ProductImage AddImage(
@@ -647,8 +652,31 @@ namespace HyperLocalMarket.Domain.Products
                 shouldBePrimary);
 
             _images.Add(productImage);
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
             return productImage;
+        }
+
+        public void ReplaceDeliveryOptions(IEnumerable<Guid> optionIds, DateTime utcNow)
+        {
+            EnsureNotArchived();
+            Guard.Utc(utcNow, nameof(utcNow));
+            ArgumentNullException.ThrowIfNull(optionIds);
+            var requested = optionIds.ToList();
+            if (requested.Count > 50 || requested.Any(id => id == Guid.Empty) ||
+                requested.Distinct().Count() != requested.Count)
+            {
+                throw new DomainException("Select at most 50 distinct delivery options.");
+            }
+
+            var ids = requested.ToHashSet();
+            // Keep unchanged tracked links. Clearing and recreating them can cause EF key conflicts.
+            _deliveryOptions.RemoveAll(link => !ids.Contains(link.DeliveryOptionId));
+            var existing = _deliveryOptions.Select(link => link.DeliveryOptionId).ToHashSet();
+            foreach (var id in ids.Where(id => !existing.Contains(id)))
+                _deliveryOptions.Add(new ProductDeliveryOption(StoreId, Id, id));
+
+            DeliveryOptionsVersion++;
+            Touch(utcNow);
         }
 
         public void Publish(DateTime utcNow)
@@ -656,7 +684,8 @@ namespace HyperLocalMarket.Domain.Products
             EnsureNotArchived();
             Guard.Utc(utcNow, nameof(utcNow));
 
-            if (!_variants.Any(variant => variant.IsActive))
+            if (!_variants.Any(variant => variant.IsListed && variant.IsActive) ||
+                _variants.Any(variant => variant.IsListed && variant.IsActive && !variant.IsPriceSet))
             {
                 throw new DomainException(
                     "A product requires at least one active variant before publication.");
@@ -670,7 +699,7 @@ namespace HyperLocalMarket.Domain.Products
 
             Status = ProductStatus.Active;
             PublishedAtUtc ??= utcNow;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductPublishedDomainEvent(Id, StoreId, utcNow));
@@ -682,7 +711,7 @@ namespace HyperLocalMarket.Domain.Products
             Guard.Utc(utcNow, nameof(utcNow));
 
             Status = ProductStatus.Draft;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         public void Archive(DateTime utcNow)
@@ -696,7 +725,7 @@ namespace HyperLocalMarket.Domain.Products
 
             Status = ProductStatus.Archived;
             ArchivedAtUtc = utcNow;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new ProductArchivedDomainEvent(Id, StoreId, utcNow));
@@ -708,16 +737,16 @@ namespace HyperLocalMarket.Domain.Products
             out string displayName,
             out string signature)
         {
-            if (selectedOptionValues.Count != _options.Count)
+            if (selectedOptionValues.Count != _options.Count(x => x.IsListed))
             {
                 throw new DomainException(
                     "A variant must select exactly one value from every product option.");
             }
 
-            var selections = new List<ProductVariantSelection>(_options.Count);
-            var displayParts = new List<string>(_options.Count);
+            var selections = new List<ProductVariantSelection>(_options.Count(x => x.IsListed));
+            var displayParts = new List<string>(_options.Count(x => x.IsListed));
 
-            foreach (var option in _options.OrderBy(option => option.DisplayOrder))
+            foreach (var option in _options.Where(x => x.IsListed).OrderBy(option => option.DisplayOrder))
             {
                 if (!selectedOptionValues.TryGetValue(option.Id, out var valueId) ||
                     !option.ContainsValue(valueId))
@@ -746,7 +775,7 @@ namespace HyperLocalMarket.Domain.Products
 
         private (string DisplayName, string Signature) ValidateAndDescribeSelections(IReadOnlyDictionary<Guid, Guid> selectedOptionValues)
         {
-            if (selectedOptionValues.Count != _options.Count)
+            if (selectedOptionValues.Count != _options.Count(x => x.IsListed))
             {
                 throw new DomainException(
                     "A variant must select exactly one value from every product option.");
@@ -757,7 +786,7 @@ namespace HyperLocalMarket.Domain.Products
             var validatedSelections =
                 new List<(Guid OptionId, Guid OptionValueId)>();
 
-            foreach (var option in _options.OrderBy(
+            foreach (var option in _options.Where(x => x.IsListed).OrderBy(
                          option => option.DisplayOrder))
             {
                 if (!selectedOptionValues.TryGetValue(
@@ -821,7 +850,7 @@ namespace HyperLocalMarket.Domain.Products
         {
             Guard.NotEmpty(optionId, nameof(optionId));
 
-            return _options.SingleOrDefault(option => option.Id == optionId)
+            return _options.SingleOrDefault(option => option.Id == optionId && option.IsListed)
                    ?? throw new DomainException(
                        $"Product option '{optionId}' was not found.");
         }
@@ -914,4 +943,6 @@ namespace HyperLocalMarket.Domain.Products
     }
 
 }
+
+
 

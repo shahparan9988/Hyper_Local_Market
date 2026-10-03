@@ -23,9 +23,9 @@ namespace HyperLocalMarket.Domain.ValueObjects
                 throw new ArgumentOutOfRangeException(nameof(latitude), "Latitude must be between -90 and 90.");
             }
 
-            if (longitude < -180 || latitude > 180)
+            if (longitude < -180 || longitude > 180)
             {
-                throw new ArgumentOutOfRangeException(nameof(latitude), "Longitude must be between -180 and 180.");
+                throw new ArgumentOutOfRangeException(nameof(longitude), "Longitude must be between -180 and 180.");
             }
 
             Latitude = latitude;

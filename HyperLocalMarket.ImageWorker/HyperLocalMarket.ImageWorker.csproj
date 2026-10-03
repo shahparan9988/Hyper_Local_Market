@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-HyperLocalMarket.ImageWorker-6e62def3-e958-4af4-b1b5-87ea7a5cce92</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HyperLocalMarket.Application\HyperLocalMarket.Application.csproj" />
+    <ProjectReference Include="..\HyperLocalMarket.Infrastructure\HyperLocalMarket.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

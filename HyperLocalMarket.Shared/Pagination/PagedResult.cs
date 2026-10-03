@@ -23,7 +23,7 @@ namespace HyperLocalMarket.Shared.Pagination
             PageSize = pageSize;
             TotalCount = totalCount;
         }
-        public static PagedResult<T> Success(IReadOnlyCollection<T> value, int pageNumber, int pageSize, int totalCount)
+        public static PagedResult<T> Create(IReadOnlyCollection<T> value, int pageNumber, int pageSize, int totalCount)
         {
             return new PagedResult<T>(value, pageNumber, pageSize, totalCount);
         }

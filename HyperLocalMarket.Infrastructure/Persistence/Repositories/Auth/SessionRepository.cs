@@ -32,7 +32,7 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Repositories.Auth
                     join user in _dbContext.Users
                         on session.UserId equals user.Id
                     where session.TokenHash == tokenHash &&
-                          session.IsActive &&
+                          session.RevokedAtUtc == null &&
                           session.ExpiresAtUtc > utcNow &&
                           user.IsActive
                     select session)

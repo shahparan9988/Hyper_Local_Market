@@ -37,5 +37,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
-  }
+  },
+  "AWS_PROFILE": "hlm-dev",
+  "AWS_REGION": "ap-southeast-1"
 }

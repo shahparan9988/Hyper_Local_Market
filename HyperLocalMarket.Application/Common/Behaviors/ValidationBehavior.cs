@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
+using SharedValidationException =
+    HyperLocalMarket.Shared.Exceptions.ValidationException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -48,8 +50,16 @@ namespace HyperLocalMarket.Application.Common.Behaviors
 
             if (validationFailures.Count != 0)
             {
-                throw new ValidationException(
-                    validationFailures);
+                var errors = validationFailures
+               .GroupBy(failure => failure.PropertyName)
+               .ToDictionary(
+                   group => group.Key,
+                   group => group
+                       .Select(failure => failure.ErrorMessage)
+                       .Distinct()
+                       .ToArray());
+
+                throw new SharedValidationException(errors);
             }
 
             return await next(cancellationToken);

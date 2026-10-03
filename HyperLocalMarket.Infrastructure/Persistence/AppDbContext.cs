@@ -2,6 +2,8 @@
 using HyperLocalMarket.Domain.Authorization;
 using HyperLocalMarket.Domain.Categories;
 using HyperLocalMarket.Domain.common;
+using HyperLocalMarket.Domain.Images;
+using HyperLocalMarket.Domain.Inventory;
 using HyperLocalMarket.Domain.Products;
 using HyperLocalMarket.Domain.Stores;
 using HyperLocalMarket.Domain.Users;
@@ -29,18 +31,29 @@ namespace HyperLocalMarket.Infrastructure.Persistence
         public DbSet<PlatformPermission> PlatformPermissions => Set<PlatformPermission>();
         public DbSet<PlatformRolePermission> PlatformRolePermissions => Set<PlatformRolePermission>();
         public DbSet<UserPlatformRole> UserPlatformRoles => Set<UserPlatformRole>();
+        public DbSet<StoreBrandingImage> StoreBrandingImages => Set<StoreBrandingImage>();
+        public DbSet<ProductImageAsset> ProductImageAssets => Set<ProductImageAsset>();
+        public DbSet<ProductVariant> ProductVariants => Set<ProductVariant>();
+        public DbSet<ProductVariantSelection> ProductVariantSelections => Set<ProductVariantSelection>();
+        public DbSet<ProductDeliveryOption> ProductDeliveryOptions => Set<ProductDeliveryOption>();
+        public DbSet<StoreDeliveryOption> StoreDeliveryOptions => Set<StoreDeliveryOption>();
+        public DbSet<ProductOption> ProductOptions => Set<ProductOption>();
+        public DbSet<ProductOptionValue> ProductOptionValues => Set<ProductOptionValue>();
+        public DbSet<ProductImage> ProductImages => Set<ProductImage>();
+        public DbSet<StoreProductCategory> StoreProductCategories => Set<StoreProductCategory>();
+        public DbSet<InventoryItem> InventoryItems => Set<InventoryItem>();
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public new Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             AddDomainEventsToOutbox();
 
-            foreach (var entry in ChangeTracker.Entries())
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    $"{entry.Entity.GetType().Name} - {entry.State}");
-            }
+            //foreach (var entry in ChangeTracker.Entries())
+            //{
+            //    System.Diagnostics.Debug.WriteLine(
+            //        $"{entry.Entity.GetType().Name} - {entry.State}");
+            //}
 
             return base.SaveChangesAsync(cancellationToken);
         }

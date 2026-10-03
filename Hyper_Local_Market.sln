@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperLocalMarket.Infrastruc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperLocalMarket.Shared", "HyperLocalMarket.Shared\HyperLocalMarket.Shared.csproj", "{6C64F3A1-9262-49CA-9E27-205EC570C19B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HyperLocalMarket.ImageWorker", "HyperLocalMarket.ImageWorker\HyperLocalMarket.ImageWorker.csproj", "{548B9F8F-EE9E-43E5-8BFB-76981D743024}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C64F3A1-9262-49CA-9E27-205EC570C19B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{548B9F8F-EE9E-43E5-8BFB-76981D743024}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{548B9F8F-EE9E-43E5-8BFB-76981D743024}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{548B9F8F-EE9E-43E5-8BFB-76981D743024}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{548B9F8F-EE9E-43E5-8BFB-76981D743024}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

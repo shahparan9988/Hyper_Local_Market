@@ -2,6 +2,7 @@
 using HyperLocalMarket.Domain.Products;
 using HyperLocalMarket.Domain.Stores.Events;
 using HyperLocalMarket.Domain.ValueObjects;
+using HyperLocalMarket.Shared.Exceptions;
 
 namespace HyperLocalMarket.Domain.Stores;
 
@@ -36,6 +37,10 @@ public sealed class Store : AggregateRoot
     public bool IsDeliveryAvailable { get; private set; }
     public bool IsAcceptingOrders { get; private set; }
 
+    public string? FulfillmentNotes { get; private set; }
+    public DateTime? FulfillmentConfiguredAtUtc { get; private set; }
+
+    // Retained during migration. New delivery options do not read these legacy fields.
     public decimal? MinimumOrderAmount { get; private set; }
     public decimal? DeliveryFee { get; private set; }
     public decimal? DeliveryRadiusKm { get; private set; }
@@ -162,6 +167,48 @@ public sealed class Store : AggregateRoot
         MarkAsUpdated();
     }
 
+
+    public void UpdateContact(
+        string phoneNumber,
+        string? email)
+    {
+        // Validate everything before modifying the Store.
+        var validatedPhoneNumber = ValidateRequiredText(
+            phoneNumber,
+            nameof(phoneNumber),
+            PhoneNumberMaxLength);
+
+        var validatedEmail = ValidateOptionalText(
+            email,
+            nameof(email),
+            EmailMaxLength);
+
+        PhoneNumber = validatedPhoneNumber;
+        Email = validatedEmail;
+
+        MarkAsUpdated();
+    }
+
+    public void UpdateBusinessInfo(string name, string? description)
+    {
+        var validatedName = ValidateRequiredText(
+            name,
+            nameof(name),
+            NameMaxLength);
+
+        var validatedDescription = ValidateOptionalText(
+            description,
+            nameof(description),
+            DescriptionMaxLength);
+
+        Name = validatedName;
+        Description = validatedDescription;
+
+        MarkAsUpdated();
+    }
+
+
+
     public void UpdateSlug(string slug)
     {
         Slug = ValidateSlug(slug);
@@ -198,12 +245,12 @@ public sealed class Store : AggregateRoot
 
         ValidateBusinessHours(normalizedHours);
 
-        if (Status == StoreStatus.Active &&
-            normalizedHours.Count == 0)
-        {
-            throw new InvalidOperationException(
-                "An active store must have business hours.");
-        }
+        //if (Status == StoreStatus.Active &&
+        //    normalizedHours.Count == 0)
+        //{
+        //    throw new InvalidOperationException(
+        //        "An active store must have business hours.");
+        //}
 
         _businessHours.Clear();
 
@@ -235,103 +282,50 @@ public sealed class Store : AggregateRoot
     public void UpdateFulfillment(
         bool isPickupAvailable,
         bool isDeliveryAvailable,
-        decimal? minimumOrderAmount,
-        decimal? deliveryFee,
-        decimal? deliveryRadiusKm)
+        string? fulfillmentNotes,
+        DateTime utcNow)
     {
-        if (minimumOrderAmount is < 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(minimumOrderAmount),
-                "Minimum order amount cannot be negative.");
-        }
-
-        if (deliveryFee is < 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(deliveryFee),
-                "Delivery fee cannot be negative.");
-        }
-
-        if (deliveryRadiusKm is <= 0)
-        {
-            throw new ArgumentOutOfRangeException(
-                nameof(deliveryRadiusKm),
-                "Delivery radius must be greater than zero.");
-        }
-
-        if (isDeliveryAvailable && !deliveryRadiusKm.HasValue)
-        {
-            throw new InvalidOperationException(
-                "A delivery radius is required when delivery is available.");
-        }
-
-        if (!isDeliveryAvailable &&
-            (minimumOrderAmount.HasValue ||
-             deliveryFee.HasValue ||
-             deliveryRadiusKm.HasValue))
-        {
-            throw new InvalidOperationException(
-                "Delivery settings cannot be provided when delivery " +
-                "is unavailable.");
-        }
-
-        if (Status == StoreStatus.Active &&
-            !isPickupAvailable &&
-            !isDeliveryAvailable)
-        {
-            throw new InvalidOperationException(
-                "An active store must provide pickup, delivery, or both.");
-        }
+        Guard.Utc(utcNow, nameof(utcNow));
+        var notes = Guard.OptionalText(
+            fulfillmentNotes, nameof(fulfillmentNotes), 500);
 
         IsPickupAvailable = isPickupAvailable;
         IsDeliveryAvailable = isDeliveryAvailable;
+        FulfillmentNotes = notes;
+        FulfillmentConfiguredAtUtc = utcNow;
+        UpdatedAtUtc = utcNow;
 
-        MinimumOrderAmount = minimumOrderAmount;
-        DeliveryFee = deliveryFee;
-        DeliveryRadiusKm = deliveryRadiusKm;
-
-        MarkAsUpdated();
+        // Do not delete options, change orders, or erase legacy fee data here.
     }
 
-    public void Activate()
+    public void Activate(DateTime utcNow)
     {
-        if (Status == StoreStatus.Closed)
+        Guard.Utc(utcNow, nameof(utcNow));
+
+        if (Status == StoreStatus.Active)
         {
-            throw new InvalidOperationException(
-                "A closed store cannot be activated.");
+            return;
         }
 
-        if (!IsPickupAvailable && !IsDeliveryAvailable)
+        if (Status != StoreStatus.Draft)
         {
-            throw new InvalidOperationException(
-                "An active store must provide pickup, delivery, or both.");
+            throw new DomainException("Only a draft store can be published.");
         }
 
-        if (_businessHours.Count == 0)
-        {
-            throw new InvalidOperationException(
-                "Business hours must be configured before activation.");
-        }
-
-        if (IsDeliveryAvailable && !DeliveryRadiusKm.HasValue)
-        {
-            throw new InvalidOperationException(
-                "A delivery radius must be configured before activation.");
-        }
+        EnsureRequiredProfileIsPresent();
 
         Status = StoreStatus.Active;
-        IsAcceptingOrders = true;
-
-        MarkAsUpdated();
+        IsAcceptingOrders = false;
+        UpdatedAtUtc = utcNow;
     }
 
-    public void PauseOrders()
+    public void PauseOrders(DateTime utcNow)
     {
+        Guard.Utc(utcNow, nameof(utcNow));
+
         if (Status != StoreStatus.Active)
         {
-            throw new InvalidOperationException(
-                "Only an active store can pause orders.");
+            throw new DomainException("Only a published store can pause orders.");
         }
 
         if (!IsAcceptingOrders)
@@ -340,22 +334,19 @@ public sealed class Store : AggregateRoot
         }
 
         IsAcceptingOrders = false;
-        MarkAsUpdated();
+        UpdatedAtUtc = utcNow;
     }
 
-    public void ResumeOrders()
+    public void ResumeOrders(DateTime utcNow)
     {
+        Guard.Utc(utcNow, nameof(utcNow));
+
         if (Status != StoreStatus.Active)
         {
-            throw new InvalidOperationException(
-                "Only an active store can accept orders.");
+            throw new DomainException("Only a published store can accept orders.");
         }
 
-        if (_businessHours.Count == 0)
-        {
-            throw new InvalidOperationException(
-                "Business hours must be configured before accepting orders.");
-        }
+        EnsureRequiredProfileIsPresent();
 
         if (IsAcceptingOrders)
         {
@@ -363,7 +354,31 @@ public sealed class Store : AggregateRoot
         }
 
         IsAcceptingOrders = true;
-        MarkAsUpdated();
+        UpdatedAtUtc = utcNow;
+    }
+
+    private void EnsureRequiredProfileIsPresent()
+    {
+        if (string.IsNullOrWhiteSpace(Name) ||
+            string.IsNullOrWhiteSpace(PhoneNumber) ||
+            string.IsNullOrWhiteSpace(TimeZoneId))
+        {
+            throw new DomainException(
+                "Store name, phone number and timezone are required.");
+        }
+
+        var coordinates = Location?.Coordinates;
+
+        if (string.IsNullOrWhiteSpace(Location?.CountryCode) ||
+            string.IsNullOrWhiteSpace(Location?.Address?.AddressLine1) ||
+            coordinates is null ||
+            !double.IsFinite(coordinates.Latitude) ||
+            !double.IsFinite(coordinates.Longitude) ||
+            coordinates.Latitude is < -90 or > 90 ||
+            coordinates.Longitude is < -180 or > 180)
+        {
+            throw new DomainException("A valid store address and map location are required.");
+        }
     }
 
     public bool CanAcceptOrdersAt(DateTime utcDateTime)
@@ -381,6 +396,16 @@ public sealed class Store : AggregateRoot
             return false;
         }
 
+        /*
+            * The seller is accepting orders but has not provided
+            * a schedule. Customers must be warned that opening
+            * hours are unknown.
+            */
+        if (_businessHours.Count == 0)
+        {
+            return true;
+        }
+
         var timeZone = TimeZoneInfo.FindSystemTimeZoneById(
             TimeZoneId);
 
@@ -390,9 +415,9 @@ public sealed class Store : AggregateRoot
 
         var localTime = TimeOnly.FromDateTime(localDateTime);
 
-        return _businessHours.Any(x =>
-            x.DayOfWeek == localDateTime.DayOfWeek &&
-            x.Contains(localTime));
+        return _businessHours.Any(hour =>
+            hour.DayOfWeek == localDateTime.DayOfWeek &&
+            hour.Contains(localTime));
     }
 
     public void Suspend()

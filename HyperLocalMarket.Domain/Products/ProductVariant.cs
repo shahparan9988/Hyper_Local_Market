@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HyperLocalMarket.Domain.Products
 {
-    public sealed class ProductVariant : Entity
+    public sealed partial class ProductVariant : Entity
     {
         public const int SkuMaxLength = 100;
         public const int BarcodeMaxLength = 100;
@@ -55,6 +55,7 @@ namespace HyperLocalMarket.Domain.Products
                 nameof(barcode),
                 BarcodeMaxLength);
             Price = price;
+            IsPriceSet = true;
             CompareAtPrice = compareAtPrice;
             SalesUnit = salesUnit;
             MinimumOrderQuantity = minimumOrderQuantity;
@@ -100,7 +101,7 @@ namespace HyperLocalMarket.Domain.Products
         public decimal QuantityIncrement { get; private set; }
 
         public bool IsDefault { get; private set; }
-        
+
         public Weight? ShippingWeight { get; private set; }
 
         public Dimensions? ShippingDimensions { get; private set; }
@@ -143,6 +144,7 @@ namespace HyperLocalMarket.Domain.Products
             }
 
             Price = price;
+            IsPriceSet = true;
             CompareAtPrice = compareAtPrice;
             UpdatedAtUtc = utcNow;
         }
@@ -294,3 +296,4 @@ namespace HyperLocalMarket.Domain.Products
         }
     }
 }
+

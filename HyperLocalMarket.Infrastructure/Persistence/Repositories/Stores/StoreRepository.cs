@@ -52,5 +52,20 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Repositories.Stores
                     store => store.Id == storeId && store.UserId == userId,
                     cancellationToken);
         }
+
+        public async Task<Store?> GetByIdAndUserIdAsTrackingAsync(
+            Guid storeId,
+            Guid userId,
+            CancellationToken cancellationToken = default)
+        {
+            return await _dbContext.Stores
+                .AsTracking()
+                .Include(store => store.BusinessHours)
+                .SingleOrDefaultAsync(
+                    store =>
+                        store.Id == storeId &&
+                        store.UserId == userId,
+                    cancellationToken);
+        }
     }
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Stores
 {
     public sealed class StoreConfiguration
-    : IEntityTypeConfiguration<Store>
+        : IEntityTypeConfiguration<Store>
     {
         public void Configure(
             EntityTypeBuilder<Store> builder)
@@ -102,7 +102,15 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Stores
                 .IsRequired();
 
             builder.Property(x => x.UpdatedAtUtc)
+                .HasColumnType("timestamp with time zone")
+                .IsConcurrencyToken();
+
+            builder.Property(x => x.FulfillmentNotes)
+                .HasMaxLength(500);
+
+            builder.Property(x => x.FulfillmentConfiguredAtUtc)
                 .HasColumnType("timestamp with time zone");
+
         }
 
         private static void ConfigureLocation(
@@ -404,3 +412,6 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Stores
     }
 
 }
+
+
+

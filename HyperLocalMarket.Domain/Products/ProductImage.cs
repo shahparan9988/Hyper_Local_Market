@@ -49,6 +49,16 @@ namespace HyperLocalMarket.Domain.Products
             IsPrimary = isPrimary;
         }
 
+        public Guid? AssetId { get; private set; }
+
+        internal void AttachAsset(Guid assetId) => AssetId = assetId;
+        internal void SetCatalogOrder(int order)
+        {
+            DisplayOrder = order;
+            IsPrimary = order == 0;
+            ProductVariantId = null;
+        }
+
         public Guid ProductId { get; private set; }
 
         public Guid? ProductVariantId { get; private set; }
@@ -67,3 +77,4 @@ namespace HyperLocalMarket.Domain.Products
 
     }
 }
+

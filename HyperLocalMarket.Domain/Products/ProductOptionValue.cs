@@ -37,7 +37,23 @@ namespace HyperLocalMarket.Domain.Products
 
         public string Value { get; private set; } = null!;
 
+
         public int DisplayOrder { get; private set; }
+        public bool IsListed { get; private set; } = true;
+
+        internal static ProductOptionValue CreateCatalog(Guid optionId, CatalogOptionValue input, int order) =>
+            new(optionId, input.Value, order) { Id = input.Id };
+
+        internal void ApplyCatalog(string value, int order)
+        {
+            Value = Guard.RequiredText(value, nameof(value), ValueMaxLength);
+            DisplayOrder = order;
+            IsListed = true;
+        }
+
+        internal void RetireCatalog() => IsListed = false;
+
 
     }
+
 }

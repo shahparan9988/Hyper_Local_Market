@@ -28,6 +28,9 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Products
                 .HasMaxLength(ProductOption.NameMaxLength)
                 .IsRequired();
 
+            builder.Property(option => option.IsListed)
+                .HasDefaultValue(true).ValueGeneratedNever();
+
             builder.Property(option => option.DisplayOrder)
                 .IsRequired();
 
@@ -45,6 +48,7 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Products
                 option.Name
             })
                 .IsUnique()
+                .HasFilter("\"IsListed\" = TRUE")
                 .HasDatabaseName(
                     "UX_ProductOptions_ProductId_Name");
 
@@ -57,4 +61,5 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Products
                     "IX_ProductOptions_ProductId_DisplayOrder");
         }
     }
+
 }

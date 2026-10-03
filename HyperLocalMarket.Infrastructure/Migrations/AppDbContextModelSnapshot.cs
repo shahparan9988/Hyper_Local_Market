@@ -371,6 +371,218 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.ToTable("CategoryProposals", (string)null);
                 });
 
+            modelBuilder.Entity("HyperLocalMarket.Domain.Images.ProductImageAsset", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("ExpectedSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FailureReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("OriginalObjectKey")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("ProcessedObjectKey")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("PublicUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<DateTime?>("StorageCleanedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OriginalObjectKey")
+                        .IsUnique();
+
+                    b.HasIndex("StoreId", "CreatedAtUtc");
+
+                    b.ToTable("ProductImageAssets", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Images.StoreBrandingImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long>("ExpectedSizeBytes")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("FailureReason")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
+
+                    b.Property<string>("Kind")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<string>("OriginalObjectKey")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("ProcessedObjectKey")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("PublicUrl")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OriginalObjectKey")
+                        .IsUnique()
+                        .HasDatabaseName("UX_StoreBrandingImages_OriginalObjectKey");
+
+                    b.HasIndex("StoreId", "Kind")
+                        .IsUnique()
+                        .HasDatabaseName("UX_StoreBrandingImages_StoreId_Kind");
+
+                    b.ToTable("StoreBrandingImages", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Inventory.InventoryAdjustment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("NewQuantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<decimal>("PreviousQuantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ProductVariantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductVariantId");
+
+                    b.HasIndex("StoreId", "ProductVariantId", "CreatedAtUtc");
+
+                    b.ToTable("InventoryAdjustments", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Inventory.InventoryItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("AllowBackorder")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("OnHandQuantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<Guid>("ProductVariantId")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("ReorderPoint")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<decimal>("ReservedQuantity")
+                        .HasPrecision(18, 3)
+                        .HasColumnType("numeric(18,3)");
+
+                    b.Property<bool>("TrackInventory")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductVariantId")
+                        .IsUnique();
+
+                    b.ToTable("InventoryItems", (string)null);
+                });
+
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.Product", b =>
                 {
                     b.Property<Guid>("Id")
@@ -397,9 +609,34 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)")
+                        .HasDefaultValue("BDT");
+
+                    b.Property<int>("DeliveryOptionsVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<string>("Description")
                         .HasMaxLength(5000)
                         .HasColumnType("character varying(5000)");
+
+                    b.Property<bool>("IsPickupAvailable")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("ManualAvailability")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Available");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -419,11 +656,38 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
+                    b.Property<Guid?>("StoreCategoryId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("StoreId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("TrackInventory")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasDefaultValue("Product");
+
                     b.Property<DateTime>("UpdatedAtUtc")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("VariantOptionName")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)")
+                        .HasDefaultValue("");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 
@@ -446,7 +710,29 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.HasIndex("StoreId", "Status")
                         .HasDatabaseName("IX_Products_StoreId_Status");
 
+                    b.HasIndex("StoreId", "StoreCategoryId", "Status");
+
                     b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Products.ProductDeliveryOption", b =>
+                {
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DeliveryOptionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("ProductId", "DeliveryOptionId");
+
+                    b.HasIndex("StoreId", "DeliveryOptionId");
+
+                    b.HasIndex("StoreId", "ProductId");
+
+                    b.ToTable("ProductDeliveryOptions", (string)null);
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.ProductImage", b =>
@@ -457,6 +743,9 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.Property<string>("AltText")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
+
+                    b.Property<Guid?>("AssetId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("integer");
@@ -477,12 +766,18 @@ namespace HyperLocalMarket.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AssetId");
+
                     b.HasIndex("ProductId")
                         .IsUnique()
                         .HasDatabaseName("UX_ProductImages_PrimaryProductImage")
                         .HasFilter("\"IsPrimary\" = TRUE AND \"ProductVariantId\" IS NULL");
 
                     b.HasIndex("ProductVariantId");
+
+                    b.HasIndex("ProductId", "AssetId")
+                        .IsUnique()
+                        .HasFilter("\"AssetId\" IS NOT NULL");
 
                     b.HasIndex("ProductId", "DisplayOrder")
                         .HasDatabaseName("IX_ProductImages_ProductId_DisplayOrder");
@@ -503,6 +798,10 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("integer");
 
+                    b.Property<bool>("IsListed")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -518,7 +817,8 @@ namespace HyperLocalMarket.Infrastructure.Migrations
 
                     b.HasIndex("ProductId", "Name")
                         .IsUnique()
-                        .HasDatabaseName("UX_ProductOptions_ProductId_Name");
+                        .HasDatabaseName("UX_ProductOptions_ProductId_Name")
+                        .HasFilter("\"IsListed\" = TRUE");
 
                     b.ToTable("ProductOptions", (string)null);
                 });
@@ -526,11 +826,14 @@ namespace HyperLocalMarket.Infrastructure.Migrations
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.ProductOptionValue", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<int>("DisplayOrder")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsListed")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<Guid>("ProductOptionId")
                         .HasColumnType("uuid");
@@ -543,7 +846,7 @@ namespace HyperLocalMarket.Infrastructure.Migrations
 
                     b.HasIndex("ProductOptionId");
 
-                    b.ToTable("ProductOptionValue");
+                    b.ToTable("ProductOptionValue", (string)null);
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.ProductVariant", b =>
@@ -555,6 +858,11 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
+                    b.Property<int>("CatalogOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -565,6 +873,14 @@ namespace HyperLocalMarket.Infrastructure.Migrations
 
                     b.Property<bool>("IsDefault")
                         .HasColumnType("boolean");
+
+                    b.Property<bool>("IsListed")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
+                    b.Property<bool>("IsPriceSet")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
                     b.Property<decimal>("MinimumOrderQuantity")
                         .HasPrecision(18, 3)
@@ -644,6 +960,53 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.ToTable("ProductVariantSelections", (string)null);
                 });
 
+            modelBuilder.Entity("HyperLocalMarket.Domain.Products.StoreProductCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId", "NormalizedName")
+                        .IsUnique()
+                        .HasFilter("\"ParentId\" IS NULL");
+
+                    b.HasIndex("StoreId", "ParentId", "NormalizedName")
+                        .IsUnique()
+                        .HasFilter("\"ParentId\" IS NOT NULL");
+
+                    b.ToTable("StoreProductCategories", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_StoreProductCategories_NotSelf", "\"ParentId\" IS NULL OR \"ParentId\" <> \"Id\"");
+                        });
+                });
+
             modelBuilder.Entity("HyperLocalMarket.Domain.Stores.Store", b =>
                 {
                     b.Property<Guid>("Id")
@@ -671,6 +1034,13 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .HasMaxLength(320)
                         .HasColumnType("character varying(320)");
+
+                    b.Property<DateTime?>("FulfillmentConfiguredAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("FulfillmentNotes")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<bool>("IsAcceptingOrders")
                         .HasColumnType("boolean");
@@ -714,6 +1084,7 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("UpdatedAtUtc")
+                        .IsConcurrencyToken()
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
@@ -731,6 +1102,67 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .HasDatabaseName("IX_Stores_UserId_Status");
 
                     b.ToTable("Stores", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Stores.StoreDeliveryOption", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Conditions")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("CoverageDescription")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CurrencyCode")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<string>("EstimatedTimeDescription")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<decimal?>("FeeAmount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<string>("FeeType")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("character varying(30)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StoreId", "IsActive");
+
+                    b.ToTable("StoreDeliveryOptions", (string)null);
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Users.Session", b =>
@@ -804,6 +1236,38 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Infrastructure.Persistence.Idempotency.CatalogRequestReceipt", b =>
+                {
+                    b.Property<Guid>("StoreId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Operation")
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
+
+                    b.Property<Guid>("RequestKey")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Hash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("ResultJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("StoreId", "UserId", "Operation", "RequestKey");
+
+                    b.ToTable("CatalogRequestReceipts", (string)null);
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Infrastructure.Persistence.Outbox.OutboxMessage", b =>
@@ -920,6 +1384,42 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("HyperLocalMarket.Domain.Images.ProductImageAsset", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Stores.Store", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Images.StoreBrandingImage", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Stores.Store", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Inventory.InventoryAdjustment", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Products.ProductVariant", null)
+                        .WithMany()
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Inventory.InventoryItem", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Products.ProductVariant", null)
+                        .WithOne()
+                        .HasForeignKey("HyperLocalMarket.Domain.Inventory.InventoryItem", "ProductVariantId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.Product", b =>
                 {
                     b.HasOne("HyperLocalMarket.Domain.Categories.Category", null)
@@ -937,10 +1437,38 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("HyperLocalMarket.Domain.Products.StoreProductCategory", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId", "StoreCategoryId")
+                        .HasPrincipalKey("StoreId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Products.ProductDeliveryOption", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Stores.StoreDeliveryOption", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId", "DeliveryOptionId")
+                        .HasPrincipalKey("StoreId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HyperLocalMarket.Domain.Products.Product", null)
+                        .WithMany("DeliveryOptions")
+                        .HasForeignKey("StoreId", "ProductId")
+                        .HasPrincipalKey("StoreId", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.ProductImage", b =>
                 {
+                    b.HasOne("HyperLocalMarket.Domain.Images.ProductImageAsset", null)
+                        .WithMany()
+                        .HasForeignKey("AssetId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("HyperLocalMarket.Domain.Products.Product", null)
                         .WithMany("Images")
                         .HasForeignKey("ProductId")
@@ -1116,6 +1644,21 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .HasForeignKey("ProductVariantId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Domain.Products.StoreProductCategory", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Stores.Store", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("HyperLocalMarket.Domain.Products.StoreProductCategory", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId", "ParentId")
+                        .HasPrincipalKey("StoreId", "Id")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Stores.Store", b =>
@@ -1325,12 +1868,30 @@ namespace HyperLocalMarket.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("HyperLocalMarket.Domain.Stores.StoreDeliveryOption", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Stores.Store", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("HyperLocalMarket.Domain.Users.Session", b =>
                 {
                     b.HasOne("HyperLocalMarket.Domain.Users.User", null)
                         .WithMany("Sessions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("HyperLocalMarket.Infrastructure.Persistence.Idempotency.CatalogRequestReceipt", b =>
+                {
+                    b.HasOne("HyperLocalMarket.Domain.Stores.Store", null)
+                        .WithMany()
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -1341,6 +1902,8 @@ namespace HyperLocalMarket.Infrastructure.Migrations
 
             modelBuilder.Entity("HyperLocalMarket.Domain.Products.Product", b =>
                 {
+                    b.Navigation("DeliveryOptions");
+
                     b.Navigation("Images");
 
                     b.Navigation("Options");

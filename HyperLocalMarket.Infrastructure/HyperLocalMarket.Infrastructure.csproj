@@ -14,23 +14,30 @@
 
   <ItemGroup>
     <Folder Include="Caching\" />
-    <Folder Include="Persistence\Configurations\Inventory\" />
     <Folder Include="Persistence\Repositories\Categories\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.101.3" />
+    <PackageReference Include="AWSSDK.S3" Version="4.0.103.1" />
+    <PackageReference Include="AWSSDK.SQS" Version="4.0.100.13" />
+    <PackageReference Include="AWSSDK.SSO" Version="4.0.100.15" />
+    <PackageReference Include="AWSSDK.SSOOIDC" Version="4.0.100.14" />
     <PackageReference Include="MediatR" Version="14.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.22">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.22" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.8" />
     <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.8" />
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="8.0.2" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="4.1.1" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.22" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.22" />
   </ItemGroup>
 
 </Project>

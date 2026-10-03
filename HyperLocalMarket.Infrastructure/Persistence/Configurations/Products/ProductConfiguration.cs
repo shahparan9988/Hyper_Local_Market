@@ -83,6 +83,10 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Products
 
             builder.Property(product => product.ArchivedAtUtc)
                 .HasColumnType("timestamp with time zone");
+
+            builder.Property(product => product.DeliveryOptionsVersion)
+                .HasDefaultValue(0)
+                .IsConcurrencyToken();
         }
 
         private static void ConfigureRelationships(
@@ -185,6 +189,9 @@ namespace HyperLocalMarket.Infrastructure.Persistence.Configurations.Products
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.Navigation(product => product.Images)
+                .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+            builder.Navigation(product => product.DeliveryOptions)
                 .UsePropertyAccessMode(PropertyAccessMode.Field);
         }
     }

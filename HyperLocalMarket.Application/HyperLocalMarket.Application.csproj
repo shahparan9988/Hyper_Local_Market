@@ -19,13 +19,13 @@
 
   <ItemGroup>
     <Folder Include="Common\Models\" />
-    <Folder Include="Products\Queries\" />
     <Folder Include="Orders\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="12.1.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageReference Include="libphonenumber-csharp" Version="9.0.38" />
     <PackageReference Include="MediatR" Version="14.0.0" />
   </ItemGroup>
 

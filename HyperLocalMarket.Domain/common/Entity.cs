@@ -8,6 +8,20 @@ namespace HyperLocalMarket.Domain.common
 {
     public abstract class Entity
     {
-        public Guid Id { get; protected set; } = Guid.NewGuid();
+        protected Entity()
+        {
+            Id = Guid.NewGuid();
+        }
+
+        protected Entity(Guid id)
+        {
+            if (id == Guid.Empty)
+                throw new ArgumentException(
+                    "Entity ID cannot be empty.",
+                    nameof(id));
+
+            Id = id;
+        }
+        public Guid Id { get; protected set; }
     }
 }

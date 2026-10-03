@@ -15,6 +15,7 @@ namespace HyperLocalMarket.Application.Stores.Repositories
         Task<bool> ExistByNameAsync(string name, CancellationToken cancellationToken = default);
         Task<bool> ExistsBySlugAsync(string slug, CancellationToken cancellationToken = default);
         Task<Store?> GetByIdAndUserIdAsync(Guid storeId, Guid userId, CancellationToken cancellationToken = default);
+        Task<Store?> GetByIdAndUserIdAsTrackingAsync(Guid storeId, Guid userId, CancellationToken cancellationToken = default);
 
 
     }

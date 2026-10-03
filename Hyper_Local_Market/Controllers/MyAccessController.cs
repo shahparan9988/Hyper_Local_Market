@@ -8,7 +8,7 @@ namespace HyperLocalMarket.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("api/auth/me")]
+    [Route("api/auth/my")]
     public sealed class MyAccessController : ControllerBase
     {
         private readonly IMediator _mediator;

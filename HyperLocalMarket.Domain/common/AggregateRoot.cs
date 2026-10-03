@@ -9,6 +9,15 @@ namespace HyperLocalMarket.Domain.common
     public abstract class AggregateRoot : Entity
     {
         private readonly List<IDomainEvent> _domainEvents = new List<IDomainEvent>();
+
+        protected AggregateRoot()
+        {
+        }
+
+        protected AggregateRoot(Guid id)
+            : base(id)
+        {
+        }
         public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
         protected void AddDomainEvent(IDomainEvent domainEvent)
         {

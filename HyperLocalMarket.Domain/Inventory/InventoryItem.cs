@@ -44,7 +44,15 @@ namespace HyperLocalMarket.Domain.Inventory
             ReservedQuantity = 0;
             ReorderPoint = reorderPoint;
             CreatedAtUtc = utcNow;
+            Touch(utcNow);
+        }
+
+        public int Version { get; private set; }
+
+        private void Touch(DateTime utcNow)
+        {
             UpdatedAtUtc = utcNow;
+            Version = checked(Version + 1);
         }
 
         public Guid ProductVariantId { get; private set; }
@@ -104,7 +112,7 @@ namespace HyperLocalMarket.Domain.Inventory
 
             var previousOnHand = OnHandQuantity;
             OnHandQuantity += quantity;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new InventoryAdjustedDomainEvent(
@@ -138,7 +146,7 @@ namespace HyperLocalMarket.Domain.Inventory
 
             var previousOnHand = OnHandQuantity;
             OnHandQuantity = newOnHandQuantity;
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new InventoryAdjustedDomainEvent(
@@ -172,7 +180,7 @@ namespace HyperLocalMarket.Domain.Inventory
                 ReservedQuantity += quantity;
             }
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new InventoryReservedDomainEvent(
@@ -203,7 +211,7 @@ namespace HyperLocalMarket.Domain.Inventory
                 ReservedQuantity -= quantity;
             }
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new InventoryReservationReleasedDomainEvent(
@@ -241,7 +249,7 @@ namespace HyperLocalMarket.Domain.Inventory
                 OnHandQuantity -= quantity;
             }
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
 
             AddDomainEvent(
                 new InventoryReservationCommittedDomainEvent(
@@ -275,7 +283,7 @@ namespace HyperLocalMarket.Domain.Inventory
             AllowBackorder = allowBackorder;
             ReorderPoint = reorderPoint;
 
-            UpdatedAtUtc = utcNow;
+            Touch(utcNow);
         }
 
         private static void EnsurePositive(
@@ -291,3 +299,4 @@ namespace HyperLocalMarket.Domain.Inventory
 
     }
 }
+
